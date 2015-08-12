@@ -2,11 +2,17 @@ package com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.downloader;
 
 import android.os.AsyncTask;
 import android.util.Log;
+import android.util.Xml;
 
 import com.lcsmobileapps.rssteam.MainActivity;
+import com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.util.FeedParser;
+
+import org.xmlpull.v1.XmlPullParser;
+import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
@@ -28,6 +34,7 @@ public class FeedDownloader extends AsyncTask<Void, Void, String> {
     protected String doInBackground(Void... voids) {
         String result = null;
         BufferedReader in = null;
+     /*
         try {
 
             URL url = new URL("http://esporte.uol.com.br/futebol/clubes/palmeiras.xml");
@@ -56,12 +63,29 @@ public class FeedDownloader extends AsyncTask<Void, Void, String> {
             }
             mHttpUrl.disconnect();
         }
-       return result;
+        */
+        XmlPullParser parser = Xml.newPullParser();
+
+        try {
+            URL url = new URL("http://esporte.uol.com.br/futebol/clubes/palmeiras.xml");
+            mHttpUrl = (HttpURLConnection) url.openConnection();
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(mHttpUrl.getInputStream(), null);
+            parser.nextTag();
+            parser.nextTag();
+            FeedParser.parseXml(parser);
+
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        return null;
     }
 
     @Override
     protected void onPostExecute(String s) {
         super.onPostExecute(s);
-        parent.get().postXml(s);
+      //  parent.get().postXml(s);
     }
 }
