@@ -1,6 +1,6 @@
-package com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.util;
+package com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.feed;
 
-import com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.model.Feed;
+import com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.feed.Feed;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
@@ -17,7 +17,7 @@ public class FeedParser {
 
     public static List<Feed> parseXml(XmlPullParser parser) throws IOException, XmlPullParserException {
         List<Feed> entries = new ArrayList<Feed>();
-      //  parser.require(XmlPullParser.START_TAG, null, "rss version");
+        parser.require(XmlPullParser.START_TAG, null, "channel");
         while (parser.next() != XmlPullParser.END_DOCUMENT) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;

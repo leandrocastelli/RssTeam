@@ -1,4 +1,4 @@
-package com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.model;
+package com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.feed;
 
 /**
  * Created by leandro.silverio on 11/08/2015.

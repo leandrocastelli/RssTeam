@@ -1,22 +1,17 @@
-package com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.downloader;
+package com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.feed;
 
 import android.os.AsyncTask;
-import android.util.Log;
 import android.util.Xml;
 
 import com.lcsmobileapps.rssteam.MainActivity;
-import com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.util.FeedParser;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
 import java.lang.ref.WeakReference;
 import java.net.HttpURLConnection;
-import java.net.MalformedURLException;
 import java.net.URL;
 
 /**
@@ -71,6 +66,7 @@ public class FeedDownloader extends AsyncTask<Void, Void, String> {
             mHttpUrl = (HttpURLConnection) url.openConnection();
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(mHttpUrl.getInputStream(), null);
+            //Enter into Channel TAG
             parser.nextTag();
             parser.nextTag();
             FeedParser.parseXml(parser);

@@ -1,13 +1,12 @@
 package com.lcsmobileapps.rssteam;
 
-import android.support.v7.app.ActionBarActivity;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatActivity;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.downloader.FeedDownloader;
+import com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.feed.FeedDownloader;
 
 
 public class MainActivity extends AppCompatActivity {
