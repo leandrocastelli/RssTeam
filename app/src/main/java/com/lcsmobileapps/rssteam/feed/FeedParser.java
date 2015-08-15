@@ -1,6 +1,4 @@
-package com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.feed;
-
-import com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.feed.Feed;
+package com.lcsmobileapps.rssteam.feed;
 
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;

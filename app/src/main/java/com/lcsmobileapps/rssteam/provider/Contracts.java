@@ -1,4 +1,4 @@
-package com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.provider;
+package com.lcsmobileapps.rssteam.provider;
 
 import android.provider.BaseColumns;
 

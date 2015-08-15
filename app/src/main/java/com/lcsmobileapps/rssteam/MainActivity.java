@@ -6,7 +6,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.TextView;
 
-import com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.feed.FeedDownloader;
+import com.lcsmobileapps.rssteam.feed.FeedDownloader;
 
 
 public class MainActivity extends AppCompatActivity {

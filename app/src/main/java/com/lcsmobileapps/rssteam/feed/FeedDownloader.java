@@ -1,4 +1,4 @@
-package com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.feed;
+package com.lcsmobileapps.rssteam.feed;
 
 import android.os.AsyncTask;
 import android.util.Xml;
@@ -75,6 +75,8 @@ public class FeedDownloader extends AsyncTask<Void, Void, String> {
             e.printStackTrace();
         } catch (IOException e) {
             e.printStackTrace();
+        } finally {
+            mHttpUrl.disconnect();
         }
         return null;
     }

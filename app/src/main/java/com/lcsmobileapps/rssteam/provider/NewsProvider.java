@@ -1,4 +1,4 @@
-package com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.com.lcsmobileapps.rssteam.provider;
+package com.lcsmobileapps.rssteam.provider;
 
 import android.content.ContentProvider;
 import android.content.ContentValues;
@@ -8,10 +8,6 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
-import android.util.Log;
-
-import java.net.URI;
-import java.sql.Types;
 
 /**
  * Created by leandro.silverio on 13/08/2015.
