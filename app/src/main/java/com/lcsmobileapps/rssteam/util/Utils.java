@@ -26,4 +26,8 @@ public class Utils {
         SimpleDateFormat simpleDateFormat = new SimpleDateFormat("dd/MM/yy-HH:mm");
         return simpleDateFormat.format(date);
     }
+
+    public static String getTeamLink(String teamName) {
+        return null;
+    }
 }

@@ -18,6 +18,9 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
+        <provider android:name="com.lcsmobileapps.rssteam.provider.NewsProvider"
+            android:authorities="com.lcsmobileapps.rssteams.provider">
+        </provider>
     </application>
 
 </manifest>

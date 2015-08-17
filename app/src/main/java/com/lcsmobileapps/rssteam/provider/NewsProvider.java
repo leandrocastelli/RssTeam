@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
 
+import com.lcsmobileapps.rssteam.R;
+
 /**
  * Created by leandro.silverio on 13/08/2015.
  */
@@ -125,7 +127,7 @@ public class NewsProvider extends ContentProvider {
 
     protected final class DBHelper extends SQLiteOpenHelper {
         String CREATE_TABLE_NEWS =
-                "CREATE TABLE IF NOT EXISTS" + Contracts.NewsContract.TABLE_NAME + " ( "
+                "CREATE TABLE IF NOT EXISTS " + Contracts.NewsContract.TABLE_NAME + " ( "
                         + Contracts.NewsContract._ID+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
                         + Contracts.NewsContract.TEAM + " TEXT NOT NULL, "
                         + Contracts.NewsContract.TITLE + " TEXT NOT NULL, "
@@ -135,13 +137,30 @@ public class NewsProvider extends ContentProvider {
                 "CREATE TABLE IF NOT EXISTS " + Contracts.TeamsContract.TABLE_NAME + " ( "
                         + Contracts.TeamsContract._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                         + Contracts.TeamsContract.NAME +" TEXT NOT NULL, "
-                        + Contracts.TeamsContract.FLAG + " TEXT NOT NULL, "
+                        + Contracts.TeamsContract.FLAG + " INTEGER, "
                         + Contracts.TeamsContract.LINK + " TEXT NOT NULL) ";
 
 
         public DBHelper(Context context) {
             super(context, Contracts.DB, null, 1);
+            SQLiteDatabase db = getWritableDatabase();
+            db.execSQL(CREATE_TABLE_NEWS);
+            db.execSQL(CREATE_TABLE_TEAMS);
+            insertTeams(db);
 
+        }
+
+        private void insertTeams(SQLiteDatabase db) {
+            String[] teamsNames = getContext().getResources().getStringArray(R.array.teams_names);
+            String[] teamsLinks = getContext().getResources().getStringArray(R.array.teams_links);
+            int first = R.drawable.brasao_atletico_mg_80x80;
+            for (int i = 0; i < teamsNames.length; i++) {
+                ContentValues row = new ContentValues();
+                row.put(Contracts.TeamsContract.NAME,teamsNames[i]);
+                row.put(Contracts.TeamsContract.FLAG,first + i);
+                row.put(Contracts.TeamsContract.LINK,teamsLinks[i]);
+                db.insert(Contracts.TeamsContract.TABLE_NAME,null,row);
+            }
         }
 
         @Override
