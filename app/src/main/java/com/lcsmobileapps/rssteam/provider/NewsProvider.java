@@ -5,6 +5,7 @@ import android.content.ContentValues;
 import android.content.Context;
 import android.content.UriMatcher;
 import android.database.Cursor;
+import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.net.Uri;
@@ -21,10 +22,10 @@ public class NewsProvider extends ContentProvider {
     private static final String CONTENT_TYPE_NEWS_ITEM = "vnd.android.cursor.item/vnd.com.lcsmobileapps.providers."+ Contracts.NewsContract.TABLE_NAME;
     private static final String CONTENT_TYPE_TEAM = "vnd.android.cursor.dir/vnd.com.lcsmobileapps.providers."+ Contracts.TeamsContract.TABLE_NAME;
     private static final String CONTENT_TYPE_TEAM_ITEM = "vnd.android.cursor.item/vnd.com.lcsmobileapps.providers."+ Contracts.TeamsContract.TABLE_NAME;
-    protected static final Uri CONTENT_URI_NEWS = Uri.parse("content://"+AUTHORITY+Contracts.NewsContract.TABLE_NAME);
-    protected static final Uri CONTENT_URI_TEAMS = Uri.parse("content://"+AUTHORITY+Contracts.TeamsContract.TABLE_NAME);
+    protected static final Uri CONTENT_URI_NEWS = Uri.parse("content://"+AUTHORITY+"/"+Contracts.NewsContract.TABLE_NAME);
+    protected static final Uri CONTENT_URI_TEAMS = Uri.parse("content://"+AUTHORITY+"/"+Contracts.TeamsContract.TABLE_NAME);
 
-    DatabaseDAO dao;
+   // DatabaseDAO dao;
     private static final int ALL_NEWS = 0;
     private static final int ITEM_NEWS = 1;
     private static final int ALL_TEAMS = 2;
@@ -133,10 +134,12 @@ public class NewsProvider extends ContentProvider {
                         + Contracts.NewsContract.TITLE + " TEXT NOT NULL, "
                         + Contracts.NewsContract.LINK + " TEXT NOT NULL, "
                         + Contracts.NewsContract.DATE  + " TEXT NOT NULL )";
+
+
         String CREATE_TABLE_TEAMS =
                 "CREATE TABLE IF NOT EXISTS " + Contracts.TeamsContract.TABLE_NAME + " ( "
                         + Contracts.TeamsContract._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                        + Contracts.TeamsContract.NAME +" TEXT NOT NULL, "
+                        + Contracts.TeamsContract.NAME +" TEXT NOT NULL UNIQUE, "
                         + Contracts.TeamsContract.FLAG + " INTEGER, "
                         + Contracts.TeamsContract.LINK + " TEXT NOT NULL) ";
 
@@ -159,7 +162,8 @@ public class NewsProvider extends ContentProvider {
                 row.put(Contracts.TeamsContract.NAME,teamsNames[i]);
                 row.put(Contracts.TeamsContract.FLAG,first + i);
                 row.put(Contracts.TeamsContract.LINK,teamsLinks[i]);
-                db.insert(Contracts.TeamsContract.TABLE_NAME,null,row);
+                db.insertWithOnConflict(Contracts.TeamsContract.TABLE_NAME, null, row,SQLiteDatabase.CONFLICT_REPLACE);
+
             }
         }
 

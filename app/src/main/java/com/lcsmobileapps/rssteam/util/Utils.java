@@ -27,7 +27,5 @@ public class Utils {
         return simpleDateFormat.format(date);
     }
 
-    public static String getTeamLink(String teamName) {
-        return null;
-    }
+
 }
