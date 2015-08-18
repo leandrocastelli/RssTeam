@@ -50,7 +50,7 @@ public class NewsProvider extends ContentProvider {
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
         String table =getTableFromURI(uri);
         SQLiteDatabase database = dbHelper.getReadableDatabase();
-        Cursor cursor = database.query(table,  projection, selection, selectionArgs, null, null, sortOrder);
+        Cursor cursor = database.query(table, projection, selection, selectionArgs, null, null, sortOrder);
         return cursor;
     }
 
@@ -91,9 +91,12 @@ public class NewsProvider extends ContentProvider {
             }break;
         }
         SQLiteDatabase database = dbHelper.getWritableDatabase();
-        long value = database.insert(table, null, contentValues);
+        long value = database.insertWithOnConflict(table, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
 
-        return Uri.withAppendedPath(contentUri, String.valueOf(value));
+        if (value != -1) {
+            return Uri.withAppendedPath(contentUri, String.valueOf(value));
+        }
+        return null;
     }
 
     @Override
@@ -124,6 +127,18 @@ public class NewsProvider extends ContentProvider {
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         return database.update(table, contentValues, selection, selectionArgs);
 
+    }
+
+    @Override
+    public int bulkInsert(Uri uri, ContentValues[] values) {
+        int total = 0;
+        for (ContentValues value : values) {
+            Uri result = insert(uri,value);
+            if (result != null) {
+                total++;
+            }
+        }
+        return total;
     }
 
     protected final class DBHelper extends SQLiteOpenHelper {
@@ -162,7 +177,7 @@ public class NewsProvider extends ContentProvider {
                 row.put(Contracts.TeamsContract.NAME,teamsNames[i]);
                 row.put(Contracts.TeamsContract.FLAG,first + i);
                 row.put(Contracts.TeamsContract.LINK,teamsLinks[i]);
-                db.insertWithOnConflict(Contracts.TeamsContract.TABLE_NAME, null, row,SQLiteDatabase.CONFLICT_REPLACE);
+                db.insertWithOnConflict(Contracts.TeamsContract.TABLE_NAME, null, row, SQLiteDatabase.CONFLICT_REPLACE);
 
             }
         }
@@ -171,6 +186,7 @@ public class NewsProvider extends ContentProvider {
         public void onCreate(SQLiteDatabase sqLiteDatabase) {
 
         }
+
 
         @Override
         public void onUpgrade(SQLiteDatabase sqLiteDatabase, int i, int i1) {

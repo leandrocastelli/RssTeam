@@ -1,10 +1,13 @@
 package com.lcsmobileapps.rssteam.feed;
 
+import android.app.DialogFragment;
+import android.app.ProgressDialog;
 import android.os.AsyncTask;
 import android.util.Xml;
 import android.widget.Toast;
 
 import com.lcsmobileapps.rssteam.MainActivity;
+import com.lcsmobileapps.rssteam.R;
 import com.lcsmobileapps.rssteam.provider.ContentController;
 import com.lcsmobileapps.rssteam.util.Utils;
 
@@ -25,10 +28,21 @@ public class FeedDownloader extends AsyncTask<String, Void, Integer> {
 
     private WeakReference<MainActivity> parent;
     private HttpURLConnection mHttpUrl;
-
+    private ProgressDialog dialog;
     public FeedDownloader(MainActivity parent) {
         this.parent = new WeakReference<MainActivity>(parent);
     }
+
+    @Override
+    protected void onPreExecute() {
+        super.onPreExecute();
+        dialog = new ProgressDialog(parent.get());
+        dialog.setIndeterminate(true);
+        dialog.setCancelable(false);
+        dialog.setMessage(parent.get().getString(R.string.checking_update));
+        dialog.show();
+    }
+
     @Override
     protected Integer doInBackground(String... team) {
         List<Feed> feeds = null;
@@ -61,6 +75,7 @@ public class FeedDownloader extends AsyncTask<String, Void, Integer> {
     @Override
     protected void onPostExecute(Integer rowsInsert) {
         super.onPostExecute(rowsInsert);
+        dialog.cancel();
         if (rowsInsert > 0)
         Toast.makeText(parent.get(),"Novas noticias: "+rowsInsert,Toast.LENGTH_SHORT).show();
     }

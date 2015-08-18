@@ -47,18 +47,9 @@ public class ContentController {
         for(Feed feed : list) {
            values.add(feed.toContentValues(teamName));
         }
-        //TODO Find a better way to check how many new rows were inserted
-       Cursor cursor = contentResolver.query(NewsProvider.CONTENT_URI_NEWS, null,Contracts.NewsContract.TEAM+" = ?",new String[]{teamName},null);
-        if (cursor != null) {
-            previous = cursor.getCount();
-            cursor.close();
-        }
-       contentResolver.bulkInsert(NewsProvider.CONTENT_URI_NEWS,values.toArray(new ContentValues[values.size()]));
-        cursor = contentResolver.query(NewsProvider.CONTENT_URI_NEWS, null,Contracts.NewsContract.TEAM+" = ?",new String[]{teamName},null);
-        if (cursor != null) {
-            result = cursor.getCount() - previous;
-            cursor.close();
-        }
+
+       int temp = contentResolver.bulkInsert(NewsProvider.CONTENT_URI_NEWS,values.toArray(new ContentValues[values.size()]));
+
         return result;
     }
 

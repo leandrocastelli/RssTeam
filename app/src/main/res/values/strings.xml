@@ -3,6 +3,7 @@
 
     <string name="hello_world">Hello world!</string>
     <string name="action_settings">Settings</string>
+    <string name="checking_update">Verificando atualizações...</string>
     <string-array name="teams_links">
         <item name="link_atletico_mg">http://rss.esporte.uol.com.br/futebol/clubes/atleticomg.xml</item>
         <item name="link_atletico_pr">http://rss.esporte.uol.com.br/futebol/clubes/atleticopr.xml</item>

@@ -1,6 +1,9 @@
 package com.lcsmobileapps.rssteam;
 
+import android.content.res.Configuration;
+import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.util.LruCache;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
@@ -8,6 +11,7 @@ import android.view.MenuItem;
 import android.widget.TextView;
 
 import com.lcsmobileapps.rssteam.feed.FeedDownloader;
+import com.lcsmobileapps.rssteam.util.ImageHelper;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -18,6 +22,12 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
         Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
         setSupportActionBar(toolbar);
+        final int maxMemory = (int)(Runtime.getRuntime().maxMemory() /1024);
+
+        int cacheSize = maxMemory / 10;
+
+        ImageHelper.mMemoryCache = new LruCache<String, Bitmap>(cacheSize);
+
         FeedDownloader feed = new FeedDownloader(this);
         feed.execute("Palmeiras");
     }
@@ -45,7 +55,7 @@ public class MainActivity extends AppCompatActivity {
     }
 
     public void postXml(String content) {
-        TextView txtView = (TextView)findViewById(R.id.hello_world);
-        txtView.setText(content);
+        //TextView txtView = (TextView)findViewById(R.id.hello_world);
+        //txtView.setText(content);
     }
 }
