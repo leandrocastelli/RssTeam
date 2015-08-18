@@ -1,5 +1,8 @@
 package com.lcsmobileapps.rssteam.feed;
 
+import android.content.ContentValues;
+
+import com.lcsmobileapps.rssteam.provider.Contracts;
 import com.lcsmobileapps.rssteam.util.Utils;
 
 import java.util.Date;
@@ -45,5 +48,14 @@ public class Feed {
 
     public void setDate(Date date) {
         this.date = date;
+    }
+
+    public ContentValues toContentValues(String teamName) {
+        ContentValues current = new ContentValues();
+        current.put(Contracts.NewsContract.TEAM,teamName);
+        current.put(Contracts.NewsContract.TITLE,getTitle());
+        current.put(Contracts.NewsContract.LINK,getLink());
+        current.put(Contracts.NewsContract.DATE,Utils.convertToString(getDate()));
+        return  current;
     }
 }

@@ -132,7 +132,7 @@ public class NewsProvider extends ContentProvider {
                         + Contracts.NewsContract._ID+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
                         + Contracts.NewsContract.TEAM + " TEXT NOT NULL, "
                         + Contracts.NewsContract.TITLE + " TEXT NOT NULL, "
-                        + Contracts.NewsContract.LINK + " TEXT NOT NULL, "
+                        + Contracts.NewsContract.LINK + " TEXT NOT NULL UNIQUE, "
                         + Contracts.NewsContract.DATE  + " TEXT NOT NULL )";
 
 
@@ -169,8 +169,7 @@ public class NewsProvider extends ContentProvider {
 
         @Override
         public void onCreate(SQLiteDatabase sqLiteDatabase) {
-            sqLiteDatabase.execSQL(CREATE_TABLE_NEWS);
-            sqLiteDatabase.execSQL(CREATE_TABLE_TEAMS);
+
         }
 
         @Override

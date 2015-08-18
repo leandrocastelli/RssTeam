@@ -2,6 +2,7 @@ package com.lcsmobileapps.rssteam.feed;
 
 import android.os.AsyncTask;
 import android.util.Xml;
+import android.widget.Toast;
 
 import com.lcsmobileapps.rssteam.MainActivity;
 import com.lcsmobileapps.rssteam.provider.ContentController;
@@ -20,7 +21,7 @@ import java.util.List;
 /**
  * Created by leandro.silverio on 11/08/2015.
  */
-public class FeedDownloader extends AsyncTask<String, Void, List<Feed>> {
+public class FeedDownloader extends AsyncTask<String, Void, Integer> {
 
     private WeakReference<MainActivity> parent;
     private HttpURLConnection mHttpUrl;
@@ -29,8 +30,9 @@ public class FeedDownloader extends AsyncTask<String, Void, List<Feed>> {
         this.parent = new WeakReference<MainActivity>(parent);
     }
     @Override
-    protected List<Feed> doInBackground(String... team) {
-        List<Feed> result = null;
+    protected Integer doInBackground(String... team) {
+        List<Feed> feeds = null;
+        int rowsInserted = 0;
         BufferedReader in = null;
         ContentController controllerInstance = ContentController.getInstance();
         XmlPullParser parser = Xml.newPullParser();
@@ -43,7 +45,8 @@ public class FeedDownloader extends AsyncTask<String, Void, List<Feed>> {
             //Enter into Channel TAG
             parser.nextTag();
             parser.nextTag();
-             result = FeedParser.parseXml(parser);
+            feeds = FeedParser.parseXml(parser);
+            rowsInserted = controllerInstance.insertNews(feeds, team[0], parent.get());
 
         } catch (XmlPullParserException e) {
             e.printStackTrace();
@@ -52,12 +55,13 @@ public class FeedDownloader extends AsyncTask<String, Void, List<Feed>> {
         } finally {
             mHttpUrl.disconnect();
         }
-        return result;
+        return rowsInserted;
     }
 
     @Override
-    protected void onPostExecute(List<Feed> list) {
-        super.onPostExecute(list);
-      //  parent.get().postXml(s);
+    protected void onPostExecute(Integer rowsInsert) {
+        super.onPostExecute(rowsInsert);
+        if (rowsInsert > 0)
+        Toast.makeText(parent.get(),"Novas noticias: "+rowsInsert,Toast.LENGTH_SHORT).show();
     }
 }

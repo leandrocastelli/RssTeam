@@ -9,11 +9,11 @@ import android.provider.BaseColumns;
 public final class Contracts {
     protected static final String DB = "news.db";
     public static  final class NewsContract implements BaseColumns{
-        protected static final String TABLE_NAME = "News";
-        protected static final String TITLE = "Title";
-        protected static final String LINK = "Link";
-        protected static final String TEAM = "Team";
-        protected static final String DATE = "Date";
+        public static final String TABLE_NAME = "News";
+        public static final String TITLE = "Title";
+        public static final String LINK = "Link";
+        public static final String TEAM = "Team";
+        public static final String DATE = "Date";
 
     }
     public static  final class TeamsContract implements BaseColumns{

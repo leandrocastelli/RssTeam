@@ -1,11 +1,14 @@
 package com.lcsmobileapps.rssteam.provider;
 
 import android.content.ContentResolver;
+import android.content.ContentValues;
 import android.content.Context;
 import android.database.Cursor;
+import android.net.Uri;
 
 import com.lcsmobileapps.rssteam.feed.Feed;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -36,7 +39,28 @@ public class ContentController {
 
     }
 
-    public void insertNews (List<Feed> list, String teamName) {
-
+    public int insertNews (List<Feed> list, String teamName, Context ctx) {
+        int previous = 0;
+        int result = 0;
+        ContentResolver contentResolver = ctx.getContentResolver();
+        List<ContentValues> values = new ArrayList<ContentValues>();
+        for(Feed feed : list) {
+           values.add(feed.toContentValues(teamName));
+        }
+        //TODO Find a better way to check how many new rows were inserted
+       Cursor cursor = contentResolver.query(NewsProvider.CONTENT_URI_NEWS, null,Contracts.NewsContract.TEAM+" = ?",new String[]{teamName},null);
+        if (cursor != null) {
+            previous = cursor.getCount();
+            cursor.close();
+        }
+       contentResolver.bulkInsert(NewsProvider.CONTENT_URI_NEWS,values.toArray(new ContentValues[values.size()]));
+        cursor = contentResolver.query(NewsProvider.CONTENT_URI_NEWS, null,Contracts.NewsContract.TEAM+" = ?",new String[]{teamName},null);
+        if (cursor != null) {
+            result = cursor.getCount() - previous;
+            cursor.close();
+        }
+        return result;
     }
+
+
 }
