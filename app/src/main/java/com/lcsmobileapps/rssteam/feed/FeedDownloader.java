@@ -75,7 +75,10 @@ public class FeedDownloader extends AsyncTask<String, Void, Integer> {
     @Override
     protected void onPostExecute(Integer rowsInsert) {
         super.onPostExecute(rowsInsert);
-        dialog.cancel();
+        if (dialog.isShowing()) {
+            dialog.cancel();
+        }
+
         if (rowsInsert > 0)
         Toast.makeText(parent.get(),"Novas noticias: "+rowsInsert,Toast.LENGTH_SHORT).show();
     }

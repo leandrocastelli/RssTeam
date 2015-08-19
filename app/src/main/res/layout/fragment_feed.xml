@@ -1,0 +1,15 @@
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent" tools:context="com.lcsmobileapps.rssteam.ui.FeedFragment"
+    android:orientation="vertical"
+    android:background="@color/background_material_light">
+
+    <android.support.v7.widget.RecyclerView
+        android:layout_width="match_parent"
+        android:layout_height="fill_parent"
+        android:scrollbars="vertical"
+        android:id="@+id/recycler_view"
+        android:clipToPadding="false"
+        android:clipChildren="false"/>
+
+</LinearLayout>
