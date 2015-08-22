@@ -30,7 +30,7 @@ public class NewsProvider extends ContentProvider {
     private static final int ITEM_NEWS = 1;
     private static final int ALL_TEAMS = 2;
     private static final int ITEM_TEAMS = 3;
-    private DBHelper dbHelper;
+    private  DBHelper dbHelper;
     private static UriMatcher uriMatcher;
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);

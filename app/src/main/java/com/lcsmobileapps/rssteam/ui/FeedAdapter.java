@@ -11,15 +11,25 @@ import android.view.ViewAnimationUtils;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.support.v7.widget.RecyclerView;
+import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.lcsmobileapps.rssteam.R;
+import com.lcsmobileapps.rssteam.feed.Feed;
+import com.lcsmobileapps.rssteam.feed.Team;
+import com.lcsmobileapps.rssteam.provider.ContentController;
+import com.lcsmobileapps.rssteam.util.ImageHelper;
+import com.lcsmobileapps.rssteam.util.Utils;
+
+import java.util.List;
 
 /**
  * Created by Leandro on 3/12/2015.
  */
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder>{
-    private String[] mDataset;
+    private List<Feed> mDataset;
     int color = Color.DKGRAY;
+    private Team team;
     Context ctx;
     int lastPosition = -1;
     @Override
@@ -29,12 +39,15 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder>{
         // set the view's size, margins, paddings and layout parameters
 
         ViewHolder vh = new ViewHolder((CardView)v);
-        v.setVisibility(View.INVISIBLE);
+
         return vh;
     }
-    public FeedAdapter(String[] myDataset, Context ctx) {
+    public FeedAdapter(List<Feed> feeds, Context ctx) {
 
-        mDataset = myDataset;
+        mDataset = feeds;
+        if (feeds != null && !feeds.isEmpty()) {
+            team = ContentController.getInstance().getTeamFromFeed(feeds.get(0), ctx);
+        }
         this.ctx = ctx;
     }
     @Override
@@ -49,15 +62,25 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder>{
     @Override
     public void onBindViewHolder(ViewHolder holder, int position) {
 
-       // Button button = (Button) holder.itemView.findViewById(R.id.my_button);
-        //button.setText(mDataset[position]);
+        if (team != null) {
 
+
+            ImageView imgView = (ImageView)holder.itemView.findViewById(R.id.team_icon);
+            TextView title = (TextView)holder.itemView.findViewById(R.id.feed_title);
+            TextView date = (TextView)holder.itemView.findViewById(R.id.feed_date);
+            ImageHelper.loadImage(imgView, team.flag,ctx);
+            title.setText(mDataset.get(position).getTitle());
+            date.setText(Utils.convertToString(mDataset.get(position).getDate()));
+        }
 
     }
-
+    public void updateFeeds (List<Feed> feeds) {
+        mDataset = feeds;
+        notifyDataSetChanged();
+    }
     @Override
     public int getItemCount() {
-        return mDataset.length;
+        return 20;
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {

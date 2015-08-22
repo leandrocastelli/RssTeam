@@ -1,5 +1,7 @@
 package com.lcsmobileapps.rssteam.util;
 
+import android.content.Context;
+import android.content.SharedPreferences;
 import android.text.format.DateUtils;
 
 import java.text.DateFormat;
@@ -11,7 +13,7 @@ import java.util.Date;
  * Created by Leandro on 8/14/2015.
  */
 public class Utils {
-
+    private static final String PREF_NAME = "TeamPref";
     //  RSS_DATE_FORMAT is used to format the Date from RSS
     public static String RSS_DATE_FORMAT = "dd/MM/yy-HH:mm";
     //      DB_DATE_FORMAT is the SQLITE3 Pattern to store Date
@@ -43,5 +45,20 @@ public class Utils {
         return simpleDateFormat.format(date);
     }
 
+    public static String getPrefTeamName(Context ctx) {
+        SharedPreferences preferences = ctx.getSharedPreferences(PREF_NAME, 0);
+
+        return preferences.getString("teamPref", "");
+    }
+
+    public static void setPrefTeamName(Context ctx, String teamName) {
+        SharedPreferences preferences = ctx.getSharedPreferences(PREF_NAME, 0);
+
+        SharedPreferences.Editor editor = preferences.edit();
+        editor.putString("teamPref",teamName);
+        editor.commit();
+
+
+    }
 
 }

@@ -3,12 +3,17 @@ package com.lcsmobileapps.rssteam.ui;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
-import android.app.Fragment;
+import android.support.v4.app.Fragment;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.lcsmobileapps.rssteam.R;
+import com.lcsmobileapps.rssteam.feed.Team;
+import com.lcsmobileapps.rssteam.provider.ContentController;
+import com.lcsmobileapps.rssteam.util.Utils;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -26,7 +31,9 @@ public class FeedFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private String mParam1;
+    private Team currentTeam;
     private String mParam2;
+    private RecyclerView recyclerView;
 
     private OnFragmentInteractionListener mListener;
 
@@ -38,13 +45,20 @@ public class FeedFragment extends Fragment {
      * @param param2 Parameter 2.
      * @return A new instance of fragment FeedFragment.
      */
-    // TODO: Rename and change types and number of parameters
+    //Lets check
     public static FeedFragment newInstance(String param1, String param2) {
         FeedFragment fragment = new FeedFragment();
         Bundle args = new Bundle();
         args.putString(ARG_PARAM1, param1);
         args.putString(ARG_PARAM2, param2);
         fragment.setArguments(args);
+
+        return fragment;
+    }
+
+    public static FeedFragment newInstance() {
+        FeedFragment fragment = new FeedFragment();
+
         return fragment;
     }
 
@@ -65,7 +79,17 @@ public class FeedFragment extends Fragment {
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_feed, container, false);
+        View v =  inflater.inflate(R.layout.fragment_feed, container, false);
+        recyclerView = (RecyclerView)v.findViewById(R.id.recycler_view);
+        RecyclerView.LayoutManager  linearLayout =  new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL, false);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setLayoutManager(linearLayout);
+        String teamName = Utils.getPrefTeamName(getActivity());
+        currentTeam = ContentController.getInstance().getTeam(teamName, getActivity());
+        FeedAdapter adapter = new FeedAdapter(ContentController.getInstance().getNews(teamName, getActivity()), getActivity());
+        recyclerView.setAdapter(adapter);
+
+        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event
@@ -78,12 +102,7 @@ public class FeedFragment extends Fragment {
     @Override
     public void onAttach(Activity activity) {
         super.onAttach(activity);
-        try {
-            mListener = (OnFragmentInteractionListener) activity;
-        } catch (ClassCastException e) {
-            throw new ClassCastException(activity.toString()
-                    + " must implement OnFragmentInteractionListener");
-        }
+
     }
 
     @Override

@@ -1,8 +1,10 @@
 package com.lcsmobileapps.rssteam;
 
+import  android.support.v4.app.FragmentTransaction;
 import android.content.res.Configuration;
 import android.graphics.Bitmap;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.util.LruCache;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -13,7 +15,9 @@ import android.widget.ListView;
 import android.widget.TextView;
 
 import com.lcsmobileapps.rssteam.feed.FeedDownloader;
+import com.lcsmobileapps.rssteam.ui.FeedFragment;
 import com.lcsmobileapps.rssteam.util.ImageHelper;
+import com.lcsmobileapps.rssteam.util.Utils;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -33,9 +37,14 @@ public class MainActivity extends AppCompatActivity {
         int cacheSize = maxMemory / 10;
 
         ImageHelper.mMemoryCache = new LruCache<String, Bitmap>(cacheSize);
-
+        Utils.setPrefTeamName(this, "Palmeiras");
         FeedDownloader feed = new FeedDownloader(this);
         feed.execute("Palmeiras");
+
+        FragmentManager manager = getSupportFragmentManager();
+        FragmentTransaction transaction = manager.beginTransaction();
+        transaction.add(R.id.main_relative,FeedFragment.newInstance(), "");
+        transaction.commit();
     }
 
     @Override

@@ -25,6 +25,10 @@ public class Feed {
             date = Utils.convertToDate(temp);
         }
     }
+    public Feed(String title, String link, Date date) {
+       this(title,link);
+        this.date = date;
+    }
 
     public String getTitle() {
         return title;

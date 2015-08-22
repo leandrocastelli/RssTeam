@@ -32,7 +32,7 @@ public class ImageHelper extends AsyncTask<Integer,Void,Bitmap>{
     private int data = 0;
     private Context ctx;
     public static LruCache<String, Bitmap> mMemoryCache;
-    public ImageHelper(ImageView imageView, Context ctx) {
+    private ImageHelper(ImageView imageView, Context ctx) {
         // Use a WeakReference to ensure the ImageView can be garbage collected
         imageViewReference = new WeakReference<ImageView>(imageView);
         this.ctx = ctx;
