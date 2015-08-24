@@ -32,7 +32,7 @@
             android:layout_margin="8dp"
 
             android:layout_toRightOf="@id/team_icon"
-            android:textAppearance="?android:attr/textAppearanceMedium"
+            android:textAppearance="?android:attr/textAppearanceSmall"
             />
         <TextView
             android:id="@+id/feed_date"

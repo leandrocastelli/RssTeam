@@ -80,7 +80,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder>{
     }
     @Override
     public int getItemCount() {
-        return 20;
+        return mDataset.size();
     }
 
     public static class ViewHolder extends RecyclerView.ViewHolder {
@@ -103,7 +103,6 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder>{
         Animator animator;
         if (appear) {
             animator = ViewAnimationUtils.createCircularReveal(viewToAnimate, cx, cy, 0, finalRadius);
-            viewToAnimate.setVisibility(View.VISIBLE);
 
             } else {
             animator = ViewAnimationUtils.createCircularReveal(viewToAnimate, cx, cy, finalRadius, 0);
@@ -111,11 +110,10 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder>{
                 @Override
                 public void onAnimationEnd(Animator animation) {
                     super.onAnimationEnd(animation);
-                    super.onAnimationEnd(animation);
-                    viewToAnimate.setVisibility(View.INVISIBLE);
+
                 }
             });
-            viewToAnimate.setVisibility(View.VISIBLE);
+
 
             }
         animator.start();

@@ -8,6 +8,7 @@ import android.database.Cursor;
 import android.database.sqlite.SQLiteConstraintException;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.database.sqlite.SQLiteQueryBuilder;
 import android.net.Uri;
 
 import com.lcsmobileapps.rssteam.R;
@@ -18,26 +19,33 @@ import com.lcsmobileapps.rssteam.R;
 public class NewsProvider extends ContentProvider {
 
     private static final String AUTHORITY = "com.lcsmobileapps.rssteams.provider";
-    private static final String CONTENT_TYPE_NEWS = "vnd.android.cursor.dir/vnd.com.lcsmobileapps.providers."+ Contracts.NewsContract.TABLE_NAME;
-    private static final String CONTENT_TYPE_NEWS_ITEM = "vnd.android.cursor.item/vnd.com.lcsmobileapps.providers."+ Contracts.NewsContract.TABLE_NAME;
-    private static final String CONTENT_TYPE_TEAM = "vnd.android.cursor.dir/vnd.com.lcsmobileapps.providers."+ Contracts.TeamsContract.TABLE_NAME;
-    private static final String CONTENT_TYPE_TEAM_ITEM = "vnd.android.cursor.item/vnd.com.lcsmobileapps.providers."+ Contracts.TeamsContract.TABLE_NAME;
-    protected static final Uri CONTENT_URI_NEWS = Uri.parse("content://"+AUTHORITY+"/"+Contracts.NewsContract.TABLE_NAME);
-    protected static final Uri CONTENT_URI_TEAMS = Uri.parse("content://"+AUTHORITY+"/"+Contracts.TeamsContract.TABLE_NAME);
+    private static final String CONTENT_TYPE_NEWS = "vnd.android.cursor.dir/vnd.com.lcsmobileapps.providers." + Contracts.NewsContract.TABLE_NAME;
+    private static final String CONTENT_TYPE_NEWS_ITEM = "vnd.android.cursor.item/vnd.com.lcsmobileapps.providers." + Contracts.NewsContract.TABLE_NAME;
+    private static final String CONTENT_TYPE_TEAM = "vnd.android.cursor.dir/vnd.com.lcsmobileapps.providers." + Contracts.TeamsContract.TABLE_NAME;
+    private static final String CONTENT_TYPE_TEAM_ITEM = "vnd.android.cursor.item/vnd.com.lcsmobileapps.providers." + Contracts.TeamsContract.TABLE_NAME;
+    private static final String CONTENT_TYPE_TEAM_NEWS = "vnd.android.cursor.dir/vnd.com.lcsmobileapps.providers." + Contracts.TeamsContract.TABLE_NAME+"_NEWS";
+    protected static final Uri CONTENT_URI_NEWS = Uri.parse("content://" + AUTHORITY + "/" + Contracts.NewsContract.TABLE_NAME);
+    protected static final Uri CONTENT_URI_TEAMS = Uri.parse("content://" + AUTHORITY + "/" + Contracts.TeamsContract.TABLE_NAME);
+    protected static final Uri CONTENT_URI_TEAM_NEWS = Uri.parse("content://"+AUTHORITY+"/"+Contracts.TeamsContract.TABLE_NAME+"_NEWS");
 
-   // DatabaseDAO dao;
+    // DatabaseDAO dao;
     private static final int ALL_NEWS = 0;
     private static final int ITEM_NEWS = 1;
     private static final int ALL_TEAMS = 2;
     private static final int ITEM_TEAMS = 3;
-    private  DBHelper dbHelper;
+    private static final int ITEM_TEAMS_NEWS = 4;
+
+    private DBHelper dbHelper;
     private static UriMatcher uriMatcher;
+
     static {
         uriMatcher = new UriMatcher(UriMatcher.NO_MATCH);
-        uriMatcher.addURI(AUTHORITY,Contracts.NewsContract.TABLE_NAME, ALL_NEWS);
-        uriMatcher.addURI(AUTHORITY,Contracts.NewsContract.TABLE_NAME+"/#",ITEM_NEWS);
-        uriMatcher.addURI(AUTHORITY,Contracts.TeamsContract.TABLE_NAME,ALL_TEAMS);
-        uriMatcher.addURI(AUTHORITY,Contracts.TeamsContract.TABLE_NAME+"/#",ITEM_TEAMS);
+        uriMatcher.addURI(AUTHORITY, Contracts.NewsContract.TABLE_NAME, ALL_NEWS);
+        uriMatcher.addURI(AUTHORITY, Contracts.NewsContract.TABLE_NAME + "/#", ITEM_NEWS);
+        uriMatcher.addURI(AUTHORITY, Contracts.TeamsContract.TABLE_NAME, ALL_TEAMS);
+        uriMatcher.addURI(AUTHORITY, Contracts.TeamsContract.TABLE_NAME + "/#", ITEM_TEAMS);
+        uriMatcher.addURI(AUTHORITY, Contracts.TeamsContract.TABLE_NAME + "_NEWS", ITEM_TEAMS_NEWS);
+
     }
 
     @Override
@@ -48,9 +56,29 @@ public class NewsProvider extends ContentProvider {
 
     @Override
     public Cursor query(Uri uri, String[] projection, String selection, String[] selectionArgs, String sortOrder) {
-        String table =getTableFromURI(uri);
+        String table = getTableFromURI(uri);
         SQLiteDatabase database = dbHelper.getReadableDatabase();
-        Cursor cursor = database.query(table, projection, selection, selectionArgs, null, null, sortOrder);
+        Cursor cursor = null;
+        String type = getType(uri);
+        switch (type) {
+            case CONTENT_TYPE_TEAM:
+            case CONTENT_TYPE_NEWS: {
+                cursor = database.query(table, projection, selection, selectionArgs, null, null, sortOrder);
+            }
+            break;
+            case CONTENT_TYPE_TEAM_NEWS: {
+                //More Complex Query needs SQLiteQueryBuilder
+                SQLiteQueryBuilder sqLiteQueryBuilder = new SQLiteQueryBuilder();
+                sqLiteQueryBuilder.setTables(Contracts.TeamsContract.TABLE_NAME + " INNER JOIN " +
+                                Contracts.NewsContract.TABLE_NAME + " ON " +
+                                Contracts.TeamsContract.TABLE_NAME + "." + Contracts.TeamsContract.NAME +
+                                " = " + Contracts.NewsContract.TABLE_NAME + "." + Contracts.NewsContract.TEAM
+                );
+
+                cursor = sqLiteQueryBuilder.query(database,projection,selection,selectionArgs,null,null, sortOrder);
+            }
+        }
+
         return cursor;
     }
 
@@ -67,6 +95,8 @@ public class NewsProvider extends ContentProvider {
                 return CONTENT_TYPE_NEWS;
             case ITEM_NEWS:
                 return CONTENT_TYPE_NEWS_ITEM;
+            case ITEM_TEAMS_NEWS:
+                return CONTENT_TYPE_TEAM_NEWS;
         }
         return null;
     }
@@ -82,13 +112,15 @@ public class NewsProvider extends ContentProvider {
                 table = Contracts.NewsContract.TABLE_NAME;
                 contentUri = CONTENT_URI_NEWS;
 
-            }break;
+            }
+            break;
             case CONTENT_TYPE_TEAM:
             case CONTENT_TYPE_TEAM_ITEM: {
                 table = Contracts.TeamsContract.TABLE_NAME;
                 contentUri = CONTENT_URI_TEAMS;
 
-            }break;
+            }
+            break;
         }
         SQLiteDatabase database = dbHelper.getWritableDatabase();
         long value = database.insertWithOnConflict(table, null, contentValues, SQLiteDatabase.CONFLICT_IGNORE);
@@ -102,11 +134,12 @@ public class NewsProvider extends ContentProvider {
     @Override
     public int delete(Uri uri, String selection, String[] selectionArgs) {
         String table = getTableFromURI(uri);
-        SQLiteDatabase dataBase=dbHelper.getWritableDatabase();
+        SQLiteDatabase dataBase = dbHelper.getWritableDatabase();
 
         return dataBase.delete(table, selection, selectionArgs);
     }
-    private String getTableFromURI (Uri uri) {
+
+    private String getTableFromURI(Uri uri) {
         switch (uriMatcher.match(uri)) {
             case ALL_NEWS:
             case ITEM_NEWS:
@@ -121,6 +154,7 @@ public class NewsProvider extends ContentProvider {
         }
         return "";
     }
+
     @Override
     public int update(Uri uri, ContentValues contentValues, String selection, String[] selectionArgs) {
         String table = getType(uri);
@@ -133,7 +167,7 @@ public class NewsProvider extends ContentProvider {
     public int bulkInsert(Uri uri, ContentValues[] values) {
         int total = 0;
         for (ContentValues value : values) {
-            Uri result = insert(uri,value);
+            Uri result = insert(uri, value);
             if (result != null) {
                 total++;
             }
@@ -144,17 +178,17 @@ public class NewsProvider extends ContentProvider {
     protected final class DBHelper extends SQLiteOpenHelper {
         String CREATE_TABLE_NEWS =
                 "CREATE TABLE IF NOT EXISTS " + Contracts.NewsContract.TABLE_NAME + " ( "
-                        + Contracts.NewsContract._ID+ " INTEGER PRIMARY KEY AUTOINCREMENT, "
+                        + Contracts.NewsContract._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
                         + Contracts.NewsContract.TEAM + " TEXT NOT NULL, "
                         + Contracts.NewsContract.TITLE + " TEXT NOT NULL, "
                         + Contracts.NewsContract.LINK + " TEXT NOT NULL UNIQUE, "
-                        + Contracts.NewsContract.DATE  + " TEXT NOT NULL )";
+                        + Contracts.NewsContract.DATE + " TEXT NOT NULL )";
 
 
         String CREATE_TABLE_TEAMS =
                 "CREATE TABLE IF NOT EXISTS " + Contracts.TeamsContract.TABLE_NAME + " ( "
                         + Contracts.TeamsContract._ID + " INTEGER PRIMARY KEY AUTOINCREMENT, "
-                        + Contracts.TeamsContract.NAME +" TEXT NOT NULL UNIQUE, "
+                        + Contracts.TeamsContract.NAME + " TEXT NOT NULL UNIQUE, "
                         + Contracts.TeamsContract.FLAG + " INTEGER, "
                         + Contracts.TeamsContract.LINK + " TEXT NOT NULL) ";
 
@@ -174,9 +208,9 @@ public class NewsProvider extends ContentProvider {
             int first = R.drawable.brasao_atletico_mg_80x80;
             for (int i = 0; i < teamsNames.length; i++) {
                 ContentValues row = new ContentValues();
-                row.put(Contracts.TeamsContract.NAME,teamsNames[i]);
-                row.put(Contracts.TeamsContract.FLAG,first + i);
-                row.put(Contracts.TeamsContract.LINK,teamsLinks[i]);
+                row.put(Contracts.TeamsContract.NAME, teamsNames[i]);
+                row.put(Contracts.TeamsContract.FLAG, first + i);
+                row.put(Contracts.TeamsContract.LINK, teamsLinks[i]);
                 db.insertWithOnConflict(Contracts.TeamsContract.TABLE_NAME, null, row, SQLiteDatabase.CONFLICT_REPLACE);
 
             }

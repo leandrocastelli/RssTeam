@@ -58,10 +58,9 @@ public class ContentController {
                 Contracts.TeamsContract.TABLE_NAME+"."+ Contracts.TeamsContract.NAME +
                 " = "+Contracts.NewsContract.TABLE_NAME+"."+Contracts.NewsContract.TEAM +
                 " WHERE " + Contracts.NewsContract.TABLE_NAME + "."+Contracts.NewsContract.LINK + " = \""+ feed.getLink() + "\""; */
-        SQLiteQueryBuilder queryBuilder = new SQLiteQueryBuilder();
-        queryBuilder.
 
-        Cursor result =
+
+        Cursor result = contentResolver.query(NewsProvider.CONTENT_URI_TEAM_NEWS, new String[]{Contracts.TeamsContract.NAME,Contracts.TeamsContract.FLAG,Contracts.TeamsContract.TABLE_NAME+"."+Contracts.TeamsContract.LINK}, Contracts.NewsContract.TABLE_NAME+"."+Contracts.NewsContract.LINK + " = ?", new String[]{feed.getLink()}, null);
         if (result != null && result.moveToFirst()) {
             String name = result.getString(0);
             int flag = result.getInt(1);

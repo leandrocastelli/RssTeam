@@ -1,5 +1,6 @@
 package com.lcsmobileapps.rssteam.feed;
 
+import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
@@ -26,11 +27,11 @@ import java.util.List;
  */
 public class FeedDownloader extends AsyncTask<String, Void, Integer> {
 
-    private WeakReference<MainActivity> parent;
+    private WeakReference<Activity> parent;
     private HttpURLConnection mHttpUrl;
     private ProgressDialog dialog;
-    public FeedDownloader(MainActivity parent) {
-        this.parent = new WeakReference<MainActivity>(parent);
+    public FeedDownloader(Activity parent) {
+        this.parent = new WeakReference<Activity>(parent);
     }
 
     @Override

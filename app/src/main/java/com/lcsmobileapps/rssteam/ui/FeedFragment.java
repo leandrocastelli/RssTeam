@@ -4,13 +4,16 @@ import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.Toolbar;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 
 import com.lcsmobileapps.rssteam.R;
+import com.lcsmobileapps.rssteam.feed.FeedDownloader;
 import com.lcsmobileapps.rssteam.feed.Team;
 import com.lcsmobileapps.rssteam.provider.ContentController;
 import com.lcsmobileapps.rssteam.util.Utils;
@@ -80,6 +83,8 @@ public class FeedFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         View v =  inflater.inflate(R.layout.fragment_feed, container, false);
+        Toolbar toolbar = (Toolbar)v.findViewById(R.id.toolbar);
+        ((AppCompatActivity)getActivity()).setSupportActionBar(toolbar);
         recyclerView = (RecyclerView)v.findViewById(R.id.recycler_view);
         RecyclerView.LayoutManager  linearLayout =  new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL, false);
         recyclerView.setHasFixedSize(true);
@@ -88,6 +93,8 @@ public class FeedFragment extends Fragment {
         currentTeam = ContentController.getInstance().getTeam(teamName, getActivity());
         FeedAdapter adapter = new FeedAdapter(ContentController.getInstance().getNews(teamName, getActivity()), getActivity());
         recyclerView.setAdapter(adapter);
+        FeedDownloader feed = new FeedDownloader(getActivity());
+        feed.execute(currentTeam.name);
 
         return v;
     }
