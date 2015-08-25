@@ -4,12 +4,14 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.os.Message;
 import android.util.Xml;
 import android.widget.Toast;
 
 import com.lcsmobileapps.rssteam.MainActivity;
 import com.lcsmobileapps.rssteam.R;
 import com.lcsmobileapps.rssteam.provider.ContentController;
+import com.lcsmobileapps.rssteam.ui.FeedFragment;
 import com.lcsmobileapps.rssteam.util.Utils;
 
 import org.xmlpull.v1.XmlPullParser;
@@ -69,6 +71,7 @@ public class FeedDownloader extends AsyncTask<String, Void, Integer> {
             e.printStackTrace();
         } finally {
             mHttpUrl.disconnect();
+
         }
         return rowsInserted;
     }
@@ -80,7 +83,10 @@ public class FeedDownloader extends AsyncTask<String, Void, Integer> {
             dialog.cancel();
         }
 
-        if (rowsInsert > 0)
-        Toast.makeText(parent.get(),"Novas noticias: "+rowsInsert,Toast.LENGTH_SHORT).show();
+        if (rowsInsert > 0) {
+            Toast.makeText(parent.get(), "Novas noticias: " + rowsInsert, Toast.LENGTH_SHORT).show();
+            FeedFragment.MyHandler myHandler = new FeedFragment.MyHandler();
+            myHandler.sendEmptyMessage(0);
+        }
     }
 }

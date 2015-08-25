@@ -98,7 +98,10 @@ public class ContentController {
     public List<Feed> getNews (String teamName, Context ctx) {
         List<Feed> list = new ArrayList<Feed>();
         ContentResolver contentResolver = ctx.getContentResolver();
-        Cursor result = contentResolver.query(NewsProvider.CONTENT_URI_NEWS, new String[]{Contracts.NewsContract.TITLE, Contracts.NewsContract.LINK, Contracts.NewsContract.DATE}, Contracts.NewsContract.TEAM + "=?", new String[]{teamName}, null);
+        Cursor result = contentResolver.query(NewsProvider.CONTENT_URI_NEWS,
+                new String[]{Contracts.NewsContract.TITLE, Contracts.NewsContract.LINK, Contracts.NewsContract.DATE},
+                Contracts.NewsContract.TEAM + "=? Order By " + Contracts.NewsContract.DATE + " desc" ,
+                new String[]{teamName}, null);
         if (result == null) {
             return null;
         }

@@ -11,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 import android.widget.ListView;
 import android.widget.TextView;
 
@@ -29,6 +30,9 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
 
+       // Toolbar toolbar = (Toolbar)findViewById(R.id.toolbar);
+
+     //  setSupportActionBar(toolbar);
         mDrawerLayout = (DrawerLayout)findViewById(R.id.drawer_layout);
 
         final int maxMemory = (int)(Runtime.getRuntime().maxMemory() /1024);
@@ -40,14 +44,15 @@ public class MainActivity extends AppCompatActivity {
 
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
-        transaction.add(R.id.main_relative,FeedFragment.newInstance(), "");
+        transaction.add(R.id.main_relative, FeedFragment.newInstance(), "");
         transaction.commit();
+
     }
 
     @Override
     public boolean onCreateOptionsMenu(Menu menu) {
         // Inflate the menu; this adds items to the action bar if it is present.
-        getMenuInflater().inflate(R.menu.menu_main, menu);
+      //  getMenuInflater().inflate(R.menu.menu_main, menu);
         return true;
     }
 
