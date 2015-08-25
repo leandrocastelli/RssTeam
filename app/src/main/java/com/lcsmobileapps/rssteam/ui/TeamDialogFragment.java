@@ -1,7 +1,7 @@
 package com.lcsmobileapps.rssteam.ui;
 
 
-import android.app.DialogFragment;
+import android.support.v4.app.DialogFragment;
 import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
@@ -72,6 +72,8 @@ public class TeamDialogFragment extends DialogFragment {
 
         RecyclerView recyclerView = (RecyclerView)v.findViewById(R.id.recycler_view_dialog);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(),3,GridLayoutManager.VERTICAL,false);
+        recyclerView.setHasFixedSize(true);
+        recyclerView.setAdapter(new TeamAdapter(getActivity(),this));
         
         return v;
     }

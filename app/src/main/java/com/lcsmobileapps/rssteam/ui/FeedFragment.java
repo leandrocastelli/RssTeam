@@ -5,6 +5,7 @@ import android.net.Uri;
 import android.os.Bundle;
 import android.os.Message;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -43,7 +44,8 @@ public class FeedFragment extends Fragment {
     private Team currentTeam;
     private String mParam2;
     protected static RecyclerView recyclerView;
-
+    public static final int WHAT_REFRESH_CONTENT = 0;
+    public static final int WHAT_REFRESH_TEAM = 1;
     private OnFragmentInteractionListener mListener;
 
     /**
@@ -110,6 +112,12 @@ public class FeedFragment extends Fragment {
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayout);
         String teamName = Utils.getPrefTeamName(getActivity());
+        if (teamName.isEmpty()) {
+            TeamDialogFragment dialogFragment = TeamDialogFragment.newInstance();
+            FragmentManager fm = getActivity().getSupportFragmentManager();
+
+            dialogFragment.show(fm, "");
+        }
         currentTeam = ContentController.getInstance().getTeam(teamName, getActivity());
         FeedAdapter adapter = new FeedAdapter(ContentController.getInstance().getNews(teamName, getActivity()), getActivity());
         recyclerView.setAdapter(adapter);
@@ -140,7 +148,7 @@ public class FeedFragment extends Fragment {
     @Override
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         menu.clear();
-        inflater.inflate(R.menu.menu_main,menu);
+        inflater.inflate(R.menu.menu_main, menu);
 
     }
 
@@ -152,7 +160,9 @@ public class FeedFragment extends Fragment {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            recyclerView.getAdapter().notifyDataSetChanged();
+            FeedAdapter feedAdapter = (FeedAdapter)recyclerView.getAdapter();
+
+            feedAdapter.notifyDataSetChanged();
         }
     }
 

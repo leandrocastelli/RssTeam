@@ -28,10 +28,12 @@ import java.util.List;
  */
 public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder>{
     private List<Feed> mDataset;
-    int color = Color.DKGRAY;
     private Team team;
     Context ctx;
-    int lastPosition = -1;
+
+    public void setTeam(Team team) {
+        this.team = team;
+    }
     @Override
     public ViewHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View v = LayoutInflater.from(parent.getContext())
