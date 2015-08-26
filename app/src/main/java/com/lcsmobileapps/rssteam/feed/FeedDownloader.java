@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
 import android.os.AsyncTask;
+import android.os.Bundle;
 import android.os.Message;
 import android.util.Xml;
 import android.widget.Toast;
@@ -83,11 +84,12 @@ public class FeedDownloader extends AsyncTask<String, Void, Integer> {
             dialog.cancel();
         }
 
-        if (rowsInsert > 0) {
-            Toast.makeText(parent.get(), "Novas noticias: " + rowsInsert, Toast.LENGTH_SHORT).show();
-
-        }
         FeedFragment.MyHandler myHandler = new FeedFragment.MyHandler();
         myHandler.sendEmptyMessage(FeedFragment.WHAT_REFRESH_CONTENT);
+
+        if (rowsInsert > 0) {
+            Toast.makeText(parent.get(), "Novas noticias: " + rowsInsert, Toast.LENGTH_LONG).show();
+
+        }
     }
 }

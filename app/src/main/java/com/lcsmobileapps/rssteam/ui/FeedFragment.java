@@ -3,6 +3,7 @@ package com.lcsmobileapps.rssteam.ui;
 import android.app.Activity;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -10,6 +11,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -18,12 +20,15 @@ import android.view.View;
 import android.view.ViewGroup;
 
 import com.lcsmobileapps.rssteam.R;
+import com.lcsmobileapps.rssteam.feed.Feed;
 import com.lcsmobileapps.rssteam.feed.FeedDownloader;
 import com.lcsmobileapps.rssteam.feed.Team;
 import com.lcsmobileapps.rssteam.provider.ContentController;
 import com.lcsmobileapps.rssteam.util.Utils;
 
 import android.os.Handler;
+
+import java.util.List;
 
 /**
  * A simple {@link Fragment} subclass.
@@ -163,9 +168,15 @@ public class FeedFragment extends Fragment {
             super.handleMessage(msg);
             switch (msg.what) {
                 case WHAT_REFRESH_CONTENT: {
+                    if (Looper.myLooper() == Looper.getMainLooper())
+                    {
+                        Log.i("Leandro","Main Thread");
+                    } else {
+                        Log.i("Leandro","Not Main Thread");
+                    }
                     FeedAdapter feedAdapter = (FeedAdapter)recyclerView.getAdapter();
+                    feedAdapter.updateFeeds();
 
-                    feedAdapter.notifyDataSetChanged();
                 }break;
                 case WHAT_REFRESH_TEAM: {
                     Bundle bundle = msg.getData();

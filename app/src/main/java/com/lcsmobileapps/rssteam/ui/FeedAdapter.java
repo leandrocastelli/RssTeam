@@ -3,7 +3,9 @@ package com.lcsmobileapps.rssteam.ui;
 import android.animation.Animator;
 import android.animation.AnimatorListenerAdapter;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
+import android.net.Uri;
 import android.support.v7.widget.CardView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -62,7 +64,7 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder>{
     }
 
     @Override
-    public void onBindViewHolder(ViewHolder holder, int position) {
+    public void onBindViewHolder(ViewHolder holder, final int position) {
 
         if (team != null) {
 
@@ -73,13 +75,24 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder>{
             ImageHelper.loadImage(imgView, team.flag,ctx);
             title.setText(mDataset.get(position).getTitle());
             date.setText(Utils.convertToString(mDataset.get(position).getDate()));
+            holder.mCardView.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+                    String url = mDataset.get(position).getLink();
+                    Intent i = new Intent(Intent.ACTION_VIEW);
+                    i.setData(Uri.parse(url));
+                    ctx.startActivity(i);
+                }
+            });
         }
 
     }
-    public void updateFeeds (List<Feed> feeds) {
-        mDataset = feeds;
+    public void updateFeeds () {
+        team = ContentController.getInstance().getTeam(Utils.getPrefTeamName(ctx), ctx);
+        mDataset = ContentController.getInstance().getNews(team.name,ctx);
         notifyDataSetChanged();
     }
+
     @Override
     public int getItemCount() {
         return mDataset.size();
