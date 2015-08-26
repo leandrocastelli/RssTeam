@@ -41,7 +41,7 @@ public class FeedFragment extends Fragment {
 
     // TODO: Rename and change types of parameters
     private String mParam1;
-    private Team currentTeam;
+
     private String mParam2;
     protected static RecyclerView recyclerView;
     public static final int WHAT_REFRESH_CONTENT = 0;
@@ -115,14 +115,14 @@ public class FeedFragment extends Fragment {
         if (teamName.isEmpty()) {
             TeamDialogFragment dialogFragment = TeamDialogFragment.newInstance();
             FragmentManager fm = getActivity().getSupportFragmentManager();
-
             dialogFragment.show(fm, "");
+            FeedAdapter adapter = new FeedAdapter(ContentController.getInstance().getNews("", getActivity()), getActivity());
+            recyclerView.setAdapter(adapter);
+        } else {
+            FeedAdapter adapter = new FeedAdapter(ContentController.getInstance().getNews(teamName, getActivity()), getActivity());
+            recyclerView.setAdapter(adapter);
+            refresh();
         }
-        currentTeam = ContentController.getInstance().getTeam(teamName, getActivity());
-        FeedAdapter adapter = new FeedAdapter(ContentController.getInstance().getNews(teamName, getActivity()), getActivity());
-        recyclerView.setAdapter(adapter);
-        refresh();
-
         return v;
     }
 
@@ -154,15 +154,26 @@ public class FeedFragment extends Fragment {
 
     private void refresh() {
         FeedDownloader feed = new FeedDownloader(getActivity());
-        feed.execute(currentTeam.name);
+        feed.execute(Utils.getPrefTeamName(getActivity()));
     }
+
     public static class MyHandler extends Handler {
         @Override
         public void handleMessage(Message msg) {
             super.handleMessage(msg);
-            FeedAdapter feedAdapter = (FeedAdapter)recyclerView.getAdapter();
+            switch (msg.what) {
+                case WHAT_REFRESH_CONTENT: {
+                    FeedAdapter feedAdapter = (FeedAdapter)recyclerView.getAdapter();
 
-            feedAdapter.notifyDataSetChanged();
+                    feedAdapter.notifyDataSetChanged();
+                }break;
+                case WHAT_REFRESH_TEAM: {
+                    Bundle bundle = msg.getData();
+                    String teamName = bundle.getString("team");
+
+                }
+            }
+
         }
     }
 

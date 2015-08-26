@@ -72,6 +72,7 @@ public class TeamDialogFragment extends DialogFragment {
 
         RecyclerView recyclerView = (RecyclerView)v.findViewById(R.id.recycler_view_dialog);
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(),3,GridLayoutManager.VERTICAL,false);
+        recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
         recyclerView.setAdapter(new TeamAdapter(getActivity(),this));
         

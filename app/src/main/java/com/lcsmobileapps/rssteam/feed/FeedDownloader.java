@@ -85,8 +85,9 @@ public class FeedDownloader extends AsyncTask<String, Void, Integer> {
 
         if (rowsInsert > 0) {
             Toast.makeText(parent.get(), "Novas noticias: " + rowsInsert, Toast.LENGTH_SHORT).show();
-            FeedFragment.MyHandler myHandler = new FeedFragment.MyHandler();
-            myHandler.sendEmptyMessage(FeedFragment.WHAT_REFRESH_CONTENT);
+
         }
+        FeedFragment.MyHandler myHandler = new FeedFragment.MyHandler();
+        myHandler.sendEmptyMessage(FeedFragment.WHAT_REFRESH_CONTENT);
     }
 }

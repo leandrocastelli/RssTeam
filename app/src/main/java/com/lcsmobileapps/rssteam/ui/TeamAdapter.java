@@ -1,6 +1,7 @@
 package com.lcsmobileapps.rssteam.ui;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.support.v4.app.DialogFragment;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.RecyclerView;
@@ -12,6 +13,7 @@ import android.widget.TextView;
 
 import com.lcsmobileapps.rssteam.R;
 import com.lcsmobileapps.rssteam.feed.Feed;
+import com.lcsmobileapps.rssteam.feed.FeedDownloader;
 import com.lcsmobileapps.rssteam.feed.Team;
 import com.lcsmobileapps.rssteam.provider.ContentController;
 import com.lcsmobileapps.rssteam.util.ImageHelper;
@@ -42,9 +44,12 @@ public class TeamAdapter extends RecyclerView.Adapter<RecyclerView.ViewHolder>{
             @Override
             public void onClick(View view) {
                 TextView txtView = (TextView)view.findViewById(R.id.team_name);
-                Utils.setPrefTeamName(parent.getContext(), txtView.getText().toString());
+                String teamName = txtView.getText().toString();
+                Utils.setPrefTeamName(parent.getContext(), teamName);
                 FeedFragment.MyHandler myHandler = new FeedFragment.MyHandler();
-                myHandler.sendEmptyMessage(FeedFragment.WHAT_REFRESH_TEAM);
+
+                FeedDownloader downloader = new FeedDownloader(fragment.getActivity());
+                downloader.execute(teamName);
                 fragment.dismiss();
             }
         });

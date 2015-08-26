@@ -50,7 +50,7 @@ public class ContentController {
     public List<Team> getAllTeams(Context ctx) {
         List<Team> list = new ArrayList<Team>();
         ContentResolver contentResolver = ctx.getContentResolver();
-        Cursor result = contentResolver.query(NewsProvider.CONTENT_URI_TEAMS, new String[]{Contracts.TeamsContract.NAME,Contracts.TeamsContract.FLAG,Contracts.TeamsContract.LINK}, null, null, "ORDER BY "+ Contracts.TeamsContract.NAME);
+        Cursor result = contentResolver.query(NewsProvider.CONTENT_URI_TEAMS, new String[]{Contracts.TeamsContract.NAME,Contracts.TeamsContract.FLAG,Contracts.TeamsContract.LINK}, null, null, Contracts.TeamsContract.NAME);
 
         while(result != null && result.moveToNext()) {
             String name = result.getString(0);

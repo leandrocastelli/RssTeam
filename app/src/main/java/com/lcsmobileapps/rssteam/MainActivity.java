@@ -40,7 +40,7 @@ public class MainActivity extends AppCompatActivity {
         int cacheSize = maxMemory / 10;
 
         ImageHelper.mMemoryCache = new LruCache<String, Bitmap>(cacheSize);
-        Utils.setPrefTeamName(this, "Palmeiras");
+       // Utils.setPrefTeamName(this, "Palmeiras");
 
         FragmentManager manager = getSupportFragmentManager();
         FragmentTransaction transaction = manager.beginTransaction();
