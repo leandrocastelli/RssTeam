@@ -2,6 +2,7 @@ package com.lcsmobileapps.rssteam.util;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
 import android.text.format.DateUtils;
 
 import java.text.DateFormat;
@@ -46,16 +47,16 @@ public class Utils {
     }
 
     public static String getPrefTeamName(Context ctx) {
-        SharedPreferences preferences = ctx.getSharedPreferences(PREF_NAME, 0);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
 
-        return preferences.getString("teamPref", "");
+        return preferences.getString("team_pref", "");
     }
 
     public static void setPrefTeamName(Context ctx, String teamName) {
-        SharedPreferences preferences = ctx.getSharedPreferences(PREF_NAME, 0);
+        SharedPreferences preferences = PreferenceManager.getDefaultSharedPreferences(ctx);
 
         SharedPreferences.Editor editor = preferences.edit();
-        editor.putString("teamPref",teamName);
+        editor.putString("team_pref",teamName);
         editor.commit();
 
 

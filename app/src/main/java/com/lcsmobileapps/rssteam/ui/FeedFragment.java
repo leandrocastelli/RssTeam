@@ -1,12 +1,14 @@
 package com.lcsmobileapps.rssteam.ui;
 
 import android.app.Activity;
+import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Looper;
 import android.os.Message;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
+import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
@@ -97,7 +99,12 @@ public class FeedFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_refresh : {
                 refresh();
-            }
+            }break;
+            case R.id.action_settings:{
+                Intent i = new Intent();
+                i.setClass(getActivity(),SettingPreference.class);
+                getActivity().startActivity(i);
+            }break;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -116,6 +123,13 @@ public class FeedFragment extends Fragment {
         RecyclerView.LayoutManager  linearLayout =  new LinearLayoutManager(getActivity(),LinearLayoutManager.VERTICAL, false);
         recyclerView.setHasFixedSize(true);
         recyclerView.setLayoutManager(linearLayout);
+
+        return v;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
         String teamName = Utils.getPrefTeamName(getActivity());
         if (teamName.isEmpty()) {
             TeamDialogFragment dialogFragment = TeamDialogFragment.newInstance();
@@ -128,7 +142,6 @@ public class FeedFragment extends Fragment {
             recyclerView.setAdapter(adapter);
             refresh();
         }
-        return v;
     }
 
     // TODO: Rename method, update argument and hook method into UI event

@@ -44,6 +44,7 @@
 
             android:layout_toRightOf="@id/team_icon"
             android:layout_below="@id/feed_title"
+            android:layout_alignParentBottom="true"
             android:textAppearance="?android:attr/textAppearanceSmall"
             />
 
