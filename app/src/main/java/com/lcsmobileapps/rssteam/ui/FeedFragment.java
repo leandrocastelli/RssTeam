@@ -1,6 +1,7 @@
 package com.lcsmobileapps.rssteam.ui;
 
 import android.app.Activity;
+import android.app.AlarmManager;
 import android.content.Intent;
 import android.net.Uri;
 import android.os.Bundle;
@@ -26,6 +27,7 @@ import com.lcsmobileapps.rssteam.feed.Feed;
 import com.lcsmobileapps.rssteam.feed.FeedDownloader;
 import com.lcsmobileapps.rssteam.feed.Team;
 import com.lcsmobileapps.rssteam.provider.ContentController;
+import com.lcsmobileapps.rssteam.util.AlarmController;
 import com.lcsmobileapps.rssteam.util.Utils;
 
 import android.os.Handler;
@@ -99,11 +101,13 @@ public class FeedFragment extends Fragment {
         switch (item.getItemId()) {
             case R.id.action_refresh : {
                 refresh();
+
             }break;
             case R.id.action_settings:{
                 Intent i = new Intent();
                 i.setClass(getActivity(),SettingPreference.class);
                 getActivity().startActivity(i);
+
             }break;
         }
         return super.onOptionsItemSelected(item);

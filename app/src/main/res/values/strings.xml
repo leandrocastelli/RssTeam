@@ -50,6 +50,20 @@
         <item name="name_vasco">Vasco</item>
         <item name="name_vitoria">Vitória</item>
     </string-array>
+    <string-array name="refresh_items">
+        <item name="half_hour">30 min.</item>
+        <item name="one_hour">1 hora</item>
+        <item name="six_hours">6 horas</item>
+        <item name="twelve_hours">12 horas</item>
+        <item name="once_a_day">1 vez ao dia</item>
+    </string-array>
+    <string-array name="refresh_values">
+        <item name="half_hour">1800000</item>
+        <item name="one_hour">3600000</item>
+        <item name="six_hours">21600000</item>
+        <item name="twelve_hours">43200000</item>
+        <item name="once_a_day">86400000</item>
+    </string-array>
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>

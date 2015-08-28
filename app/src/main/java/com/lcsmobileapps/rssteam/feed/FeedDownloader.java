@@ -3,8 +3,10 @@ package com.lcsmobileapps.rssteam.feed;
 import android.app.Activity;
 import android.app.DialogFragment;
 import android.app.ProgressDialog;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Looper;
 import android.os.Message;
 import android.util.Xml;
 import android.widget.Toast;
@@ -30,21 +32,24 @@ import java.util.List;
  */
 public class FeedDownloader extends AsyncTask<String, Void, Integer> {
 
-    private WeakReference<Activity> parent;
+    private WeakReference<Context> parent;
     private HttpURLConnection mHttpUrl;
     private ProgressDialog dialog;
-    public FeedDownloader(Activity parent) {
-        this.parent = new WeakReference<Activity>(parent);
+    public FeedDownloader(Context parent) {
+        this.parent = new WeakReference<Context>(parent);
     }
 
     @Override
     protected void onPreExecute() {
         super.onPreExecute();
-        dialog = new ProgressDialog(parent.get());
-        dialog.setIndeterminate(true);
-        dialog.setCancelable(false);
-        dialog.setMessage(parent.get().getString(R.string.checking_update));
-        dialog.show();
+        //Doesnt show dialog when the Service request the update
+        if (Looper.myLooper() == Looper.getMainLooper()) {
+            dialog = new ProgressDialog(parent.get());
+            dialog.setIndeterminate(true);
+            dialog.setCancelable(false);
+            dialog.setMessage(parent.get().getString(R.string.checking_update));
+            dialog.show();
+        }
     }
 
     @Override
@@ -80,7 +85,7 @@ public class FeedDownloader extends AsyncTask<String, Void, Integer> {
     @Override
     protected void onPostExecute(Integer rowsInsert) {
         super.onPostExecute(rowsInsert);
-        if (dialog.isShowing()) {
+        if (dialog !=null && dialog.isShowing()) {
             dialog.cancel();
         }
 
