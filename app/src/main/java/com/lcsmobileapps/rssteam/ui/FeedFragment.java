@@ -102,6 +102,7 @@ public class FeedFragment extends Fragment {
             case R.id.action_refresh : {
                 refresh();
 
+
             }break;
             case R.id.action_settings:{
                 Intent i = new Intent();
@@ -137,6 +138,7 @@ public class FeedFragment extends Fragment {
         String teamName = Utils.getPrefTeamName(getActivity());
         if (teamName.isEmpty()) {
             TeamDialogFragment dialogFragment = TeamDialogFragment.newInstance();
+
             FragmentManager fm = getActivity().getSupportFragmentManager();
             dialogFragment.show(fm, "");
             FeedAdapter adapter = new FeedAdapter(ContentController.getInstance().getNews("", getActivity()), getActivity());

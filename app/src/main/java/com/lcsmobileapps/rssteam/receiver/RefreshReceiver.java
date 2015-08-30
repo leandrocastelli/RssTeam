@@ -20,7 +20,7 @@ public class RefreshReceiver extends WakefulBroadcastReceiver {
     public void onReceive(Context context, Intent intent) {
         Log.i("Leandro", "Recebi");
 
-        if(intent.getAction().equals("android.intent.action.BOOT_COMPLETED")) {
+        if("android.intent.action.BOOT_COMPLETED".equals(intent.getAction())) {
             SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
             boolean isChecked = sharedPreferences.getBoolean("auto_refresh",false);
 

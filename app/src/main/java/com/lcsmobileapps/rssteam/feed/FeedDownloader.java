@@ -60,6 +60,8 @@ public class FeedDownloader extends AsyncTask<String, Void, Integer> {
         ContentController controllerInstance = ContentController.getInstance();
         XmlPullParser parser = Xml.newPullParser();
         String link = controllerInstance.getTeamLink(team[0],parent.get());
+        if (link == null)
+            return 0;
         try {
             URL url = new URL(link);
             mHttpUrl = (HttpURLConnection) url.openConnection();

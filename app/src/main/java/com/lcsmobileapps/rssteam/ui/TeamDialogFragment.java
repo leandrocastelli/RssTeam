@@ -6,6 +6,7 @@ import android.os.Bundle;
 import android.app.Fragment;
 import android.support.v7.widget.GridLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -74,7 +75,18 @@ public class TeamDialogFragment extends DialogFragment {
         RecyclerView.LayoutManager layoutManager = new GridLayoutManager(getActivity(),3,GridLayoutManager.VERTICAL,false);
         recyclerView.setLayoutManager(layoutManager);
         recyclerView.setHasFixedSize(true);
-        recyclerView.setAdapter(new TeamAdapter(getActivity(),this));
+        recyclerView.setAdapter(new TeamAdapter(getActivity(), this));
+        getDialog().setTitle("Escolha seu time");
+        getDialog().setCancelable(false);
+        recyclerView.setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View view, int i, KeyEvent keyEvent) {
+                if (keyEvent.getKeyCode() == KeyEvent.KEYCODE_BACK) {
+                    android.os.Process.killProcess(android.os.Process.myPid());
+                }
+                return true;
+            }
+        });
         
         return v;
     }

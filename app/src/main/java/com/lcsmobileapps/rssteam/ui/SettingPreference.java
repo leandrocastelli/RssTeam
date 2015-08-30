@@ -10,6 +10,7 @@ import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
 
 import com.lcsmobileapps.rssteam.R;
+import com.lcsmobileapps.rssteam.util.AlarmController;
 import com.lcsmobileapps.rssteam.util.Utils;
 
 /**
@@ -29,13 +30,19 @@ public class SettingPreference extends PreferenceActivity {
         refreshListPreference = (ListPreference)findPreference("refresh_period");
         autoRefresh = (CheckBoxPreference)findPreference("auto_refresh");
 
-        refreshListPreference.setDefaultValue(getResources().getStringArray(R.array.refresh_values)[0]);
-       // refreshListPreference.setSummary(ge);
+        if (sharedPreferences.getString("refresh_period","0").equals("0")) {
+
+            refreshListPreference.setValueIndex(0);
+        }
+        refreshListPreference.setSummary(refreshListPreference.getEntry());
         refreshListPreference.setOnPreferenceChangeListener(new Preference.OnPreferenceChangeListener() {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
                 int index = refreshListPreference.findIndexOfValue((String)o);
                 refreshListPreference.setSummary(getResources().getStringArray(R.array.refresh_items)[index]);
+                if (autoRefresh.isChecked()) {
+                    AlarmController.configureAlarm(getApplicationContext());
+                }
                 return true;
             }
         });
@@ -51,6 +58,11 @@ public class SettingPreference extends PreferenceActivity {
             @Override
             public boolean onPreferenceChange(Preference preference, Object o) {
                enableDisableRefresh((boolean)o);
+                if ((boolean)o) {
+                    AlarmController.configureAlarm(getApplicationContext());
+                } else {
+                    AlarmController.cancelAlarms(getApplicationContext());
+                }
                 return true;
             }
         });

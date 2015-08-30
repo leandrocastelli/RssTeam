@@ -89,6 +89,8 @@ public class FeedAdapter extends RecyclerView.Adapter<FeedAdapter.ViewHolder>{
     }
     public void updateFeeds () {
         team = ContentController.getInstance().getTeam(Utils.getPrefTeamName(ctx), ctx);
+        if (team == null)
+            return;
         mDataset = ContentController.getInstance().getNews(team.name,ctx);
         notifyDataSetChanged();
     }

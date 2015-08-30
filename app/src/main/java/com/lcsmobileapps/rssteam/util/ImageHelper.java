@@ -144,4 +144,19 @@ public class ImageHelper extends AsyncTask<Integer,Void,Bitmap>{
         }
 
     }
+    public static Bitmap getBitmap (int res, Context ctx) {
+        ImageHelper imageHelper = new ImageHelper(null, ctx);
+        Bitmap bitmap ;
+        final BitmapFactory.Options options = new BitmapFactory.Options();
+        options.inJustDecodeBounds = true;
+        BitmapFactory.decodeResource(ctx.getResources(), res, options);
+
+        options.inSampleSize = calculateInSampleSize(options, 64, 64);
+
+        options.inJustDecodeBounds = false;
+        bitmap = BitmapFactory.decodeResource(ctx.getResources(), res, options);
+        
+        return bitmap;
+
+    }
 }

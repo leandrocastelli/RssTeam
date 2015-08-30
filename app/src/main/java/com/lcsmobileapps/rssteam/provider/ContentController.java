@@ -100,7 +100,7 @@ public class ContentController {
     }
 
     public int insertNews (List<Feed> list, String teamName, Context ctx) {
-        int previous = 0;
+
         int result = 0;
         ContentResolver contentResolver = ctx.getContentResolver();
         List<ContentValues> values = new ArrayList<ContentValues>();
@@ -108,7 +108,7 @@ public class ContentController {
            values.add(feed.toContentValues(teamName));
         }
 
-       int temp = contentResolver.bulkInsert(NewsProvider.CONTENT_URI_NEWS, values.toArray(new ContentValues[values.size()]));
+       result = contentResolver.bulkInsert(NewsProvider.CONTENT_URI_NEWS, values.toArray(new ContentValues[values.size()]));
 
         return result;
     }
